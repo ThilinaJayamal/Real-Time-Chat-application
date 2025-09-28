@@ -19,9 +19,6 @@ function App() {
 
   useEffect(() => {
     checkAuth();
-    return () => {
-      unSubscribeFromMessage();
-    }
   }, [])
 
   if (isCheckingAuth && !authUser) {
