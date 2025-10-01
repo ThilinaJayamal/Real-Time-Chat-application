@@ -1,15 +1,23 @@
-import { Users } from "lucide-react";
+import { MessageSquarePlus, Users } from "lucide-react";
 
 const SidebarSkeleton = () => {
   // Create 8 skeleton items
   const skeletonContacts = Array(8).fill(null);
-
   return (
     <aside
       className="h-full w-20 lg:w-72 border-r border-base-300 
     flex flex-col transition-all duration-200"
     >
       {/* Header */}
+      <div className="flex items-center justify-between p-5 border-b border-base-300">
+        <div className="hidden lg:block text-xl font-semibold">
+          Chats
+        </div>
+        <div className="btn btn-sm" onClick={() => navigate("/groups")}>
+          <MessageSquarePlus size={22} />
+        </div>
+      </div>
+
       <div className="border-b border-base-300 w-full p-5">
         <div className="flex items-center gap-2">
           <Users className="w-6 h-6" />

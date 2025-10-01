@@ -10,11 +10,13 @@ import { Loader } from 'lucide-react';
 import ProfilePage from './pages/ProfilePage'
 import { Toaster } from "react-hot-toast"
 import { useThemeStore } from './store/themeStore'
-import { useChatStore } from './store/chatStore'
+import GroupChat from './pages/GroupChat'
+import CreateGroup from './components/groups/CreateGroup'
+import GroupChatContainer from './components/groups/GroupChatContainer'
+import GroupHome from './components/groups/GroupHome'
 
 function App() {
-  const { checkAuth, authUser, isCheckingAuth, onlineUsers } = useAuthStore();
-  const { unSubscribeFromMessage } = useChatStore();
+  const { checkAuth, authUser, isCheckingAuth } = useAuthStore();
   const { theme } = useThemeStore();
 
   useEffect(() => {
@@ -38,6 +40,12 @@ function App() {
         <Route path='/signup' element={!authUser ? <SignupPage /> : <Navigate to={"/"} />} />
         <Route path='/settings' element={<SettingsPage />} />
         <Route path='/profile' element={authUser ? <ProfilePage /> : <Navigate to={"/login"} />} />
+
+        <Route path='groups' element={<GroupChat />}>
+          <Route index element={<GroupHome />} />
+          <Route path='create' element={<CreateGroup />} />
+          <Route path='chat' element={<GroupChatContainer />} />
+        </Route>
       </Routes>
 
       <Toaster />
