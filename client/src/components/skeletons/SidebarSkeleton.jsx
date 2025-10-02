@@ -1,4 +1,4 @@
-import { MessageSquarePlus, Users } from "lucide-react";
+import { MessageSquareText, Users } from "lucide-react";
 
 const SidebarSkeleton = () => {
   // Create 8 skeleton items
@@ -14,7 +14,8 @@ const SidebarSkeleton = () => {
           Chats
         </div>
         <div className="btn btn-sm" onClick={() => navigate("/groups")}>
-          <MessageSquarePlus size={22} />
+          <MessageSquareText size={22} />
+          <span className="hidden lg:block"> Group Chats</span>
         </div>
       </div>
 

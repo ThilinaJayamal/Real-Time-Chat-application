@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useChatStore } from "../store/chatStore";
 import { useAuthStore } from "../store/authStore";
 import SidebarSkeleton from "./skeletons/SidebarSkeleton";
-import { Users, MessageSquarePlus } from "lucide-react";
+import { Users, MessageSquareText,Contact } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const Sidebar = () => {
@@ -31,14 +31,15 @@ const Sidebar = () => {
           Chats
         </div>
         <div className="btn btn-sm" onClick={() => navigate("/groups")}>
-          <MessageSquarePlus size={22} />
+          <MessageSquareText size={22} />
+          <span className="hidden lg:block"> Group Chats</span>
         </div>
       </div>
 
       <div className="border-b border-base-300 w-full p-5">
 
         <div className="flex items-center gap-2">
-          <Users className="size-6" />
+          <Contact className="size-6" />
           <span className="font-medium hidden lg:block">Contacts</span>
         </div>
 
