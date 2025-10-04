@@ -1,14 +1,19 @@
 import React, { useEffect, useState } from 'react'
-import { Camera,X } from 'lucide-react'
+import { Camera, X } from 'lucide-react'
 import { useChatStore } from '../../store/chatStore';
 import { useNavigate } from 'react-router-dom';
+import { useGroupStore } from '../../store/groupStore';
+import { useAuthStore } from '../../store/authStore';
 
 function CreateGroup() {
-  const { getUsers, users } = useChatStore();
-
+  const { getUsers, users, } = useChatStore();
+  const { createGroup, isCreating } = useGroupStore();
+  const { authUser } = useAuthStore();
   const navigate = useNavigate();
 
   const [memberSearch, setMemberSearch] = useState("");
+  const [name, setName] = useState("");
+  const [description, setDiscription] = useState("");
 
   const [members, setMembers] = useState([]);
 
@@ -30,6 +35,22 @@ function CreateGroup() {
 
   console.log(members)
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    await createGroup({
+      name,
+      description,
+      admins: [authUser?._id],
+      members: members?.map((user) => user._id)
+    });
+
+    setName("");
+    setDiscription("");
+    setMembers([]);
+    setMemberSearch("");
+  }
+
   function addMember(user) {
     setMembers((prev) => [...prev, user]);
   }
@@ -42,9 +63,9 @@ function CreateGroup() {
   return (
     <div className='px-4 py-6 relative'>
 
-      <div className='absolute cursor-pointer right-4 top-4' 
-      onClick={()=>navigate("/groups")}>
-        <X size={26}/>
+      <div className='absolute cursor-pointer right-4 top-4'
+        onClick={() => navigate("/groups")}>
+        <X size={26} />
       </div>
 
       <div className="flex flex-col items-start gap-4 mb-6">
@@ -81,18 +102,18 @@ function CreateGroup() {
       <div className='space-y-4'>
         <fieldset className="fieldset">
           <legend className="fieldset-legend">Group name</legend>
-          <input type="text" className="input" placeholder="Type here" />
+          <input type="text" value={name} onChange={(e) => setName(e.target.value)} className="input" placeholder="Type here" />
         </fieldset>
 
         <fieldset className="fieldset">
           <legend className="fieldset-legend">Group description</legend>
-          <input type="text" className="input" placeholder="Type here" />
+          <input type="text" value={description} onChange={(e) => setDiscription(e.target.value)} className="input" placeholder="Type here" />
         </fieldset>
 
         <fieldset className="fieldset">
           <legend className="fieldset-legend">Search members (Email / Name)</legend>
           <input type="text" className="input" placeholder="Search members..."
-            onChange={(e) => setMemberSearch(e.target.value)} />
+            value={memberSearch} onChange={(e) => setMemberSearch(e.target.value)} />
         </fieldset>
 
         <div className='max-w-md space-y-2'>
@@ -147,6 +168,11 @@ function CreateGroup() {
           </div>
 
         </div>
+
+        <button onClick={handleSubmit} className='btn btn-md mt-6'
+          disabled={isCreating}>
+          {isCreating ? "Group is creating..." : "Create Group"}
+        </button>
       </div>
 
     </div>
