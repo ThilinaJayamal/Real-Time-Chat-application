@@ -41,10 +41,9 @@ function App() {
         <Route path='/settings' element={<SettingsPage />} />
         <Route path='/profile' element={authUser ? <ProfilePage /> : <Navigate to={"/login"} />} />
 
-        <Route path='groups' element={<GroupChat />}>
-          <Route index element={<GroupHome />} />
+        <Route path='groups' element={authUser ? <GroupChat /> : <Navigate to={"/login"} />}>
+          <Route index element={<GroupHome/>} />
           <Route path='create' element={<CreateGroup />} />
-          <Route path='chat' element={<GroupChatContainer />} />
         </Route>
       </Routes>
 
