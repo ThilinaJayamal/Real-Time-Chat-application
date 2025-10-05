@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import { useAuthStore } from '../store/authStore';
-import { EyeClosed, EyeIcon, Lock, Mail, MessageSquare, User } from 'lucide-react';
+import { EyeClosed, EyeIcon, Hand, Lock, Mail } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from "react-hot-toast"
+import Animation from '../components/Animation';
 
 function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -42,7 +43,7 @@ function LoginPage() {
 
               <div className='size-12 rounded-xl bg-primary/10 flex items-center justify-center
             group-hover:bg-primary/20 transition-colors'>
-                <MessageSquare className='size-6 text-primary' />
+                <Hand className='size-6 text-primary' />
               </div>
 
               <h1 className='text-2xl font-bold mt-2'>Create Account</h1>
@@ -84,6 +85,8 @@ function LoginPage() {
             <span className='font-bold cursor-pointer underline' onClick={() => navigate("/signup")}>SignUp</span></p>
         </div>
       </div>
+
+      <Animation/>
     </div>
   )
 }
