@@ -3,6 +3,7 @@ import { useAuthStore } from '../store/authStore';
 import { EyeClosed, EyeIcon, Lock, Mail, MessageSquare, User } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from "react-hot-toast"
+import Animation from '../components/Animation';
 
 function SignupPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -97,9 +98,7 @@ function SignupPage() {
         </div>
       </div>
 
-      <div className='animate-pulse w-full h-full'>
-        <div></div>
-      </div>
+      <Animation/>
     </div>
   )
 }
