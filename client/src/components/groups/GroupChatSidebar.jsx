@@ -50,7 +50,7 @@ const GroupChatSidebar = () => {
                         className={`
               w-full p-3 flex items-center gap-3
               hover:bg-base-300 transition-colors
-              ${selectedGroup._id === group._id ? "bg-base-300 ring-1 ring-base-300" : ""}
+              ${selectedGroup?._id === group?._id ? "bg-base-300 ring-1 ring-base-300" : ""}
             `}
                     >
                         <div className="mx-auto lg:mx-0">
