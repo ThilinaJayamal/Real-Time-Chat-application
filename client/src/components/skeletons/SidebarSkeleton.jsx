@@ -1,8 +1,11 @@
-import { Users } from "lucide-react";
+import { MessageSquareText, User, Users } from "lucide-react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const SidebarSkeleton = () => {
-  // Create 8 skeleton items
+
   const skeletonContacts = Array(8).fill(null);
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
 
   return (
     <aside
@@ -10,11 +13,51 @@ const SidebarSkeleton = () => {
     flex flex-col transition-all duration-200"
     >
       {/* Header */}
-      <div className="border-b border-base-300 w-full p-5">
-        <div className="flex items-center gap-2">
-          <Users className="w-6 h-6" />
-          <span className="font-medium hidden lg:block">Contacts</span>
+      <div className="flex items-center justify-between p-5 border-b border-base-300">
+        <div className="hidden lg:block text-xl font-semibold">
+          Chats
         </div>
+
+        {
+          (pathname === "/") && (
+            <div className="btn btn-sm" onClick={() => navigate("/groups")}>
+              <MessageSquareText size={22} />
+              <span className="hidden lg:block"> Group Chats</span>
+            </div>
+          )
+        }
+
+        {
+          (pathname === "/groups") && (
+            <div className="btn btn-sm" onClick={() => navigate("/")}>
+              <Users size={22} />
+              <span className="hidden lg:block"> Private Chats</span>
+            </div>
+          )
+        }
+
+      </div>
+
+      <div className="border-b border-base-300 w-full p-5">
+        {
+          (pathname === "/") && (
+            <div className="flex items-center gap-2">
+              <Users className="w-6 h-6" />
+              <span className="font-medium hidden lg:block">Contacts</span>
+            </div>
+          )
+        }
+
+        {
+          (pathname === "/groups") && (
+            <div className="flex items-center gap-2">
+              <MessageSquareText className="w-6 h-6" />
+              <span className="font-medium hidden lg:block">Groups</span>
+            </div>
+          )
+        }
+
+
       </div>
 
       {/* Skeleton Contacts */}
