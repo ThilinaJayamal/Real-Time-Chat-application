@@ -2,12 +2,18 @@ import { useRef, useState } from "react";
 import { useChatStore } from "../store/chatStore";
 import { Image, Send, X } from "lucide-react";
 import toast from "react-hot-toast";
+import { useLocation } from "react-router-dom";
+import { useGroupChatStore } from "../store/groupChatStore";
 
 const MessageInput = () => {
     const [text, setText] = useState("");
     const [imagePreview, setImagePreview] = useState(null);
     const fileInputRef = useRef(null);
     const { sendMessage, isSending } = useChatStore();
+    const { sendGroupMessage } = useGroupChatStore();
+    const { pathname } = useLocation();
+
+    console.log(pathname)
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
@@ -33,10 +39,20 @@ const MessageInput = () => {
         if (!text.trim() && !imagePreview) return;
 
         try {
-            await sendMessage({
-                text: text.trim(),
-                image: imagePreview,
-            });
+            if (pathname === "/groups") {
+                const message = {
+                    text: text.trim(),
+                    image: imagePreview,
+                }
+                sendGroupMessage(message);
+            }
+            else {
+                await sendMessage({
+                    text: text.trim(),
+                    image: imagePreview,
+                });
+            }
+
 
             // Clear form
             setText("");
@@ -101,7 +117,7 @@ const MessageInput = () => {
                     className="btn btn-sm btn-circle"
                     disabled={(!text.trim() && !imagePreview) || isSending}
                 >
-                    <Send size={20}/>
+                    <Send size={20} />
                 </button>
             </form>
         </div>

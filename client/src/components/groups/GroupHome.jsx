@@ -6,7 +6,7 @@ import NoChatSelected from "../NoChatSelected"
 function GroupHome() {
   const {selectedGroup} = useGroupStore();
   return (
-    <div className='w-full h-full flex items-center justify-center'>
+    <div className='flex h-full overflow-hidden'>
       {
         selectedGroup ? <GroupChatContainer/> : <NoChatSelected/>
       }

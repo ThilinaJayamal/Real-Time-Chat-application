@@ -33,16 +33,17 @@ function CreateGroup() {
     getUsers();
   }, [])
 
-  console.log(members)
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const groupMembers = members?.map((user) => user._id);
 
     await createGroup({
       name,
       description,
       admins: [authUser?._id],
-      members: members?.map((user) => user._id)
+      members: [...groupMembers, authUser?._id]
     });
 
     setName("");
@@ -119,7 +120,7 @@ function CreateGroup() {
         <div className='max-w-md space-y-2'>
           {
             filteredUsers.map((user) => (
-              <div className='border-2 px-4 py-2 flex items-center gap-4 rounded-md'>
+              <div className='border-2 px-4 py-2 flex items-center gap-4 rounded-md' key={user?._id}>
                 <img src={user?.profilePic} alt="" className='size-12 rounded-full' />
 
                 <div className='w-full h-full flex items-center justify-between gap-2'>
@@ -148,7 +149,7 @@ function CreateGroup() {
           <div className='max-w-md space-y-2'>
             {
               members.map((user) => (
-                <div className='border-2 px-4 py-2 flex items-center gap-4 rounded-md'>
+                <div className='border-2 px-4 py-2 flex items-center gap-4 rounded-md' key={user?._id}>
                   <img src={user?.profilePic} alt="" className='size-12 rounded-full' />
 
                   <div className='w-full h-full flex items-center justify-between gap-2'>

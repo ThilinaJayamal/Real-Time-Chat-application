@@ -35,7 +35,11 @@ export const getGroupMessages = async (req, res) => {
             return res.status(401).json("You're not a valid member of this group!");
         }
 
-        const messages = await GroupMessage.find({ group: group?._id });
+        const messages = await GroupMessage.find({ group: group?._id })
+            .populate({
+                path: "sender",
+                select: "_id fullName profilePic"
+            });
 
         return res.status(200).json(messages);
     } catch (error) {

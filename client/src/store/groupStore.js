@@ -9,14 +9,16 @@ export const useGroupStore = create((set, get) => ({
     selectedGroup: null,
 
     setSelectGroup: (group) => {
-        set({selectedGroup:group});
+        set({ selectedGroup: group });
     },
 
     createGroup: async (formData) => {
-        set({ isCreating: true })
+        set({ isCreating: true });
+        const {groups} = get();
         try {
             const { data } = await axiosInstance.post("/groups", formData);
-            toast.success("Group created successfully!")
+            toast.success("Group created successfully!");
+            set({ groups: [...groups, data] })
         } catch (error) {
             toast.error(error.response.data);
         }

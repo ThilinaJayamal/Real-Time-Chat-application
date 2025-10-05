@@ -1,16 +1,19 @@
 import { create } from "zustand";
 import axiosInstance from "../lib/axios";
 import { toast } from "react-hot-toast"
+import { useGroupStore } from "./groupStore"
 
-const useGroupChatStore = create((set, get) => ({
+export const useGroupChatStore = create((set, get) => ({
     messages: [],
-    isMessageLoading: true,
-    isMessageSending: true,
+    isMessageLoading: false,
+    isMessageSending: false,
 
-    getMessages: async (id) => {
+    getMessages: async () => {
+        const id = useGroupStore.getState().selectedGroup?._id;
         set({ isMessageLoading: true })
         try {
             const { data } = await axiosInstance.get(`/group/messages/${id}`);
+            console.log(data)
             set({ messages: data })
         } catch (error) {
             toast.error(error.response?.data);
@@ -20,10 +23,13 @@ const useGroupChatStore = create((set, get) => ({
         }
     },
 
-    sendMessage: async (id) => {
+    sendGroupMessage: async (message) => {
+        const id = useGroupStore.getState().selectedGroup?._id;
         set({ isMessageSending: true })
+        const { messages } = get();
         try {
-            const { data } = await axiosInstance.post(`/group/messages/${id}`);
+            const { data } = await axiosInstance.post(`/group/messages/${id}`, message);
+            set({ messages: [...messages, data] })
         } catch (error) {
             toast.error(error.response?.data);
             set({ messages: [] })
