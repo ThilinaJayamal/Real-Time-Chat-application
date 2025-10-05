@@ -1,30 +1,18 @@
-import { useChatStore } from "../store/chatStore";
-import { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from 'react'
+import { useGroupChatStore } from '../../store/groupChatStore'
+import MessageSkeleton from '../skeletons/MessageSkeleton';
+import MessageInput from '../MessageInput';
+import GroupChatHeader from './GroupChatHeader';
+import { useGroupStore } from '../../store/groupStore';
+import { useAuthStore } from '../../store/authStore';
+import { formatMessageTime } from '../../lib/utils';
 
-import ChatHeader from "./ChatHeader";
-import MessageInput from "./MessageInput";
-import MessageSkeleton from "./skeletons/MessageSkeleton";
-import { useAuthStore } from "../store/authStore";
-import { formatMessageTime } from "../lib/utils";
-
-const ChatContainer = () => {
-  const {
-    messages,
-    getMessages,
-    isMessagesLoading,
-    selectedUser,
-    subscribeToMessages,
-    unsubscribeFromMessages,
-  } = useChatStore();
+function GroupChatContainer() {
+  const { isMessageLoading, messages, getMessages } = useGroupChatStore();
+  const { selectedGroup } = useGroupStore();
   const { authUser } = useAuthStore();
+
   const messageEndRef = useRef(null);
-
-  useEffect(() => {
-      getMessages(selectedUser._id);
-      subscribeToMessages();
-      return () => unsubscribeFromMessages();
-
-    }, [selectedUser._id, getMessages, subscribeToMessages, unsubscribeFromMessages]);
 
   useEffect(() => {
     if (messageEndRef.current && messages) {
@@ -32,35 +20,34 @@ const ChatContainer = () => {
     }
   }, [messages]);
 
-  if (isMessagesLoading) {
+  useEffect(() => {
+    getMessages()
+  }, [selectedGroup])
+
+  if (isMessageLoading) {
     return (
       <div className="flex-1 flex flex-col overflow-auto">
-        <ChatHeader />
+        <GroupChatHeader />
         <MessageSkeleton />
         <MessageInput />
       </div>
-    );
+    )
   }
-
   return (
     <div className="flex-1 flex flex-col overflow-auto">
-      <ChatHeader />
+      <GroupChatHeader />
 
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {messages.map((message) => (
           <div
             key={message._id}
-            className={`chat ${message.senderId === authUser._id ? "chat-end" : "chat-start"}`}
+            className={`chat ${message.sender._id?.toString() === authUser._id?.toString() ? "chat-end" : "chat-start"}`}
             ref={messageEndRef}
           >
             <div className=" chat-image avatar">
               <div className="size-10 rounded-full border">
                 <img
-                  src={
-                    message.senderId === authUser._id
-                      ? authUser.profilePic || "/avatar.png"
-                      : selectedUser.profilePic || "/avatar.png"
-                  }
+                  src={message.sender?.profilePic}
                   alt="profile pic"
                 />
               </div>
@@ -86,6 +73,7 @@ const ChatContainer = () => {
 
       <MessageInput />
     </div>
-  );
-};
-export default ChatContainer;
+  )
+}
+
+export default GroupChatContainer

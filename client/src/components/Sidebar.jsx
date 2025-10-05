@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { useChatStore } from "../store/chatStore";
 import { useAuthStore } from "../store/authStore";
 import SidebarSkeleton from "./skeletons/SidebarSkeleton";
-import { Users } from "lucide-react";
+import { Users, MessageSquareText,Contact } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const Sidebar = () => {
   const { getUsers, users, selectedUser, setSelectedUser, isUsersLoading } = useChatStore();
@@ -10,24 +11,43 @@ const Sidebar = () => {
   const { onlineUsers } = useAuthStore();
   const [showOnlineOnly, setShowOnlineOnly] = useState(false);
 
+  const navigate = useNavigate();
+  const [search, setSearch] = useState("");
+
   useEffect(() => {
     getUsers();
   }, [getUsers]);
 
+  const searchResult = users ? users.filter(
+    (user) => user.fullName?.toLowerCase().includes(search?.toLowerCase())
+  ) : [];
+
   const filteredUsers = showOnlineOnly
-    ? users.filter((user) => onlineUsers.includes(user._id))
-    : users;
+    ? searchResult.filter((user) => onlineUsers.includes(user._id))
+    : searchResult;
 
   if (isUsersLoading) return <SidebarSkeleton />;
 
   return (
     <aside className="h-full w-20 lg:w-72 border-r border-base-300 flex flex-col transition-all duration-200">
+
+      <div className="flex items-center justify-between p-5 border-b border-base-300">
+        <div className="hidden lg:block text-xl font-semibold">
+          Chats
+        </div>
+        <div className="btn btn-sm" onClick={() => navigate("/groups")}>
+          <MessageSquareText size={22} />
+          <span className="hidden lg:block"> Group Chats</span>
+        </div>
+      </div>
+
       <div className="border-b border-base-300 w-full p-5">
+
         <div className="flex items-center gap-2">
-          <Users className="size-6" />
+          <Contact className="size-6" />
           <span className="font-medium hidden lg:block">Contacts</span>
         </div>
-        {/* TODO: Online filter toggle */}
+
         <div className="mt-3 hidden lg:flex items-center gap-2">
           <label className="cursor-pointer flex items-center gap-2">
             <input
@@ -42,7 +62,26 @@ const Sidebar = () => {
         </div>
       </div>
 
+      <div className="px-2 pt-4 hidden lg:block">
+        <label className="input">
+          <svg className="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <g
+              strokeLinejoin="round"
+              strokeLinecap="round"
+              strokeWidth="2.5"
+              fill="none"
+              stroke="currentColor"
+            >
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="m21 21-4.3-4.3"></path>
+            </g>
+          </svg>
+          <input type="search" className="grow" placeholder="Search People..." onChange={(e) => setSearch(e.target.value)} />
+        </label>
+      </div>
+
       <div className="overflow-y-auto w-full py-3">
+
         {filteredUsers.map((user) => (
           <button
             key={user._id}
@@ -67,7 +106,6 @@ const Sidebar = () => {
               )}
             </div>
 
-            {/* User info - only visible on larger screens */}
             <div className="hidden lg:block text-left min-w-0">
               <div className="font-medium truncate">{user.fullName}</div>
               <div className="text-sm text-zinc-400">

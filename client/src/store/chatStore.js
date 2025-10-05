@@ -68,7 +68,6 @@ export const useChatStore = create((set, get) => ({
 
         const socket = useAuthStore.getState().socket;
 
-        socket.off("newMessage"); //prevent duplication
         socket.on("newMessage", (message) => {
             if(message.senderId !== selectedUser._id) return;
             
