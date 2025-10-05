@@ -5,8 +5,9 @@ import cors from "cors"
 import authRouter from "./routes/auth.route.js"
 import messageRouter from "./routes/message.route.js"
 import groupRouter from "./routes/group.route.js"
+import groupMessageRaouter from "./routes/groupMessage.route.js"
 import { connectDB } from "./lib/db.js"
-import {app,server,io} from "./lib/socket.js"
+import {app,server} from "./lib/socket.js"
 
 dotenv.config();
 
@@ -21,6 +22,7 @@ connectDB();
 app.use("/api/auth", authRouter);
 app.use("/api/messages", messageRouter);
 app.use("/api/groups",groupRouter);
+app.use("/api/group/messages",groupMessageRaouter);
 
 const port = process.env.PORT;
 
