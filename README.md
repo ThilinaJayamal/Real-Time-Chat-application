@@ -33,7 +33,7 @@ cd Real-Time-Chat-application
 ### 2️⃣ Install dependencies
 ```bash
 cd server && npm install
-cd ../client && npm install
+cd client && npm install
 ```
 
 ### 3️⃣ Add environment variables  
@@ -61,12 +61,12 @@ npm run dev
 
 ---
 
-## 📡 How It Works
+## How It Works
 - Backend uses Express & Socket.io for real-time communication  
 - Frontend connects through sockets to send/receive messages instantly  
 - Messages and user data are stored in MongoDB  
 
 ---
 
-## 📜 License
+## License
 This project is open source and available under the [MIT License](LICENSE).
