@@ -13,7 +13,12 @@ export const sendGroupMessage = async (req, res) => {
             image: image
         });
 
-        return res.status(201).json(newMessage);
+        const updatedNewMessage = await newMessage.populate({
+            path:'sender',
+            select:"-password"
+        })
+
+        return res.status(201).json(updatedNewMessage);
     } catch (error) {
         return res.status(500).json(error?.nessage);
     }

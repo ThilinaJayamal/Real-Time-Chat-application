@@ -14,6 +14,7 @@ import GroupChat from './pages/GroupChat'
 import CreateGroup from './components/groups/CreateGroup'
 import GroupChatContainer from './components/groups/GroupChatContainer'
 import GroupHome from './components/groups/GroupHome'
+import ViewGroup from './components/groups/ViewGroup'
 
 function App() {
   const { checkAuth, authUser, isCheckingAuth } = useAuthStore();
@@ -42,7 +43,8 @@ function App() {
         <Route path='/profile' element={authUser ? <ProfilePage /> : <Navigate to={"/login"} />} />
 
         <Route path='groups' element={authUser ? <GroupChat /> : <Navigate to={"/login"} />}>
-          <Route index element={<GroupHome/>} />
+          <Route index element={<GroupHome />} />
+          <Route path=':id' element={<ViewGroup />} />
           <Route path='create' element={<CreateGroup />} />
         </Route>
       </Routes>

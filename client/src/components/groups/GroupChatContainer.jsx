@@ -41,7 +41,7 @@ function GroupChatContainer() {
         {messages.map((message) => (
           <div
             key={message._id}
-            className={`chat ${message.sender._id === authUser._id ? "chat-end" : "chat-start"}`}
+            className={`chat ${message.sender._id?.toString() === authUser._id?.toString() ? "chat-end" : "chat-start"}`}
             ref={messageEndRef}
           >
             <div className=" chat-image avatar">
