@@ -8,6 +8,7 @@ import { useAuthStore } from '../../store/authStore';
 function CreateGroup() {
   const { getUsers, users, } = useChatStore();
   const { createGroup, isCreating } = useGroupStore();
+  const [imagePreview, setImagePreview] = useState(null);
   const { authUser } = useAuthStore();
   const navigate = useNavigate();
 
@@ -29,6 +30,21 @@ function CreateGroup() {
       return false;
     }) : []
 
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please select an image file");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImagePreview(reader.result);
+    };
+    reader.readAsDataURL(file);
+  };
+
   useEffect(() => {
     getUsers();
   }, [])
@@ -43,6 +59,7 @@ function CreateGroup() {
       name,
       description,
       admins: [authUser?._id],
+      profilePic: imagePreview,
       members: [...groupMembers, authUser?._id]
     });
 
@@ -72,7 +89,7 @@ function CreateGroup() {
       <div className="flex flex-col items-start gap-4 mb-6">
         <div className="relative">
           <img
-            src={"/avatar.jpg"}
+            src={imagePreview ? imagePreview : "/avatar.jpg"}
             alt="Profile"
             className="size-32 rounded-full object-cover border-4 "
           />
@@ -92,6 +109,7 @@ function CreateGroup() {
               id="avatar-upload"
               className="hidden"
               accept="image/*"
+              onChange={handleImageChange}
             />
           </label>
         </div>
