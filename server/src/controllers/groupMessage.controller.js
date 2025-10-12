@@ -1,5 +1,7 @@
 import Group from "../models/group.model.js";
 import GroupMessage from "../models/groupMessage.model.js";
+import { getRecieverId } from "../lib/socket.js";
+import { io } from "../lib/socket.js";
 
 export const sendGroupMessage = async (req, res) => {
     try {
@@ -17,6 +19,20 @@ export const sendGroupMessage = async (req, res) => {
             path:'sender',
             select:"-password"
         })
+
+        // Get group members to emit real-time message
+        const group = await Group.findById(id);
+        if (group) {
+            // Emit to all group members except the sender
+            group.members.forEach((memberId) => {
+                if (memberId.toString() !== req.user._id.toString()) {
+                    const memberSocketId = getRecieverId(memberId.toString());
+                    if (memberSocketId) {
+                        io.to(memberSocketId).emit("newGroupMessage", updatedNewMessage);
+                    }
+                }
+            });
+        }
 
         return res.status(201).json(updatedNewMessage);
     } catch (error) {

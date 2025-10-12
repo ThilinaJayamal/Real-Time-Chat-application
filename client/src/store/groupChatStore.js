@@ -2,6 +2,7 @@ import { create } from "zustand";
 import axiosInstance from "../lib/axios";
 import { toast } from "react-hot-toast"
 import { useGroupStore } from "./groupStore"
+import { useAuthStore } from "./authStore";
 
 export const useGroupChatStore = create((set, get) => ({
     messages: [],
@@ -36,5 +37,24 @@ export const useGroupChatStore = create((set, get) => ({
         } finally {
             set({ isMessageSending: false })
         }
+    },
+
+    subscribeToMessages: () => {
+        const { selectedGroup } = useGroupStore.getState();
+        if (!selectedGroup) return;
+
+        const socket = useAuthStore.getState().socket;
+
+        socket.on("newGroupMessage", (message) => {
+            // Only add message if it belongs to the currently selected group
+            if(message.group !== selectedGroup._id) return;
+            
+            set({ messages: [...get().messages, message] });
+        })
+    },
+
+    unsubscribeFromMessages: () => {
+        const socket = useAuthStore.getState().socket;
+        socket.off("newGroupMessage");
     }
 }))

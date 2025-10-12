@@ -8,7 +8,7 @@ import { useAuthStore } from '../../store/authStore';
 import { formatMessageTime } from '../../lib/utils';
 
 function GroupChatContainer() {
-  const { isMessageLoading, messages, getMessages } = useGroupChatStore();
+  const { isMessageLoading, messages, getMessages, subscribeToMessages, unsubscribeFromMessages } = useGroupChatStore();
   const { selectedGroup } = useGroupStore();
   const { authUser } = useAuthStore();
 
@@ -21,7 +21,10 @@ function GroupChatContainer() {
   }, [messages]);
 
   useEffect(() => {
-    getMessages()
+    getMessages();
+    subscribeToMessages();
+    
+    return () => unsubscribeFromMessages();
   }, [selectedGroup])
 
   if (isMessageLoading) {
